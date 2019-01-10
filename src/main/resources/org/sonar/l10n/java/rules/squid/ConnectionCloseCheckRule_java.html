@@ -1,0 +1,33 @@
+<p>Connection Close Check Rule detects the usage of <code>java.sql.Connection#close()</code> method call</p>
+
+
+<h2>Non-Compliant Approach</h2>
+
+
+<pre>
+Connection connection = <font color="orange">null;</font>
+<font color="orange">try</font> {
+    connection = <font color="red">...</font><font color="orange">;</font><font color="blue"> // get the connection from the Platform;</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+    <font color="red"><b>connection.close()</b></font><font color="orange">;</font>
+} <font color="orange">catch</font> (SQLException sqlException) {
+    <font color="red"><b>connection.close()</b></font><font color="orange">;</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+    sqlException.printStackTrace()<font color="orange">;</font>
+} <font color="orange">finally</font> {
+    <font color="red"><b>connection.close()</b></font><font color="orange">;</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+}
+</pre>
+
+
+<h2>Compliant Solution</h2>
+
+
+<pre>
+<font color="orange">try</font> (<font color="green"><b>Connection connection = ...</b></font>) { <font color="blue">// get the connection from the Platform inside the try expression</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+} <font color="orange">catch</font> (SQLException sqlException) {
+    logger.error("Failed to get the connection from Platform", sqlException)<font color="orange">;</font>
+}
+</pre>

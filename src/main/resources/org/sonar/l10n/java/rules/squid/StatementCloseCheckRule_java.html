@@ -1,0 +1,71 @@
+<p>Statement Close Check Rule detects the usage of <code>java.sql.Statement#close()</code> method call</p>
+
+
+<h2>Non-Compliant Approach</h2>
+
+
+<pre>
+Statement statement = <font color="orange">null;</font>
+<font color="orange">try</font> {
+    <font color="blue"> // get the connection from the Platform;</font>
+    statement = connection.createStatement()<font color="orange">;</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+    <font color="red"><b>statement.close()</b></font><font color="orange">;</font>
+} <font color="orange">catch</font> (SQLException sqlException) {
+    <font color="red"><b>statement.close()</b></font><font color="orange">;</font>
+    sqlException.printStackTrace()<font color="orange">;</font>
+} <font color="orange">finally</font> {
+    <font color="red"><b>statement.close()</b></font><font color="orange">;</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+}
+</pre>
+
+
+<h2>Compliant Solution</h2>
+
+
+<h3>Using SQLBuilder - Platform Project: ms-epcsfw</h3>
+<pre>
+<font color="red">import</font> <font color="cyan">com.metricstream.systemi.sql.SQLBuilder</font><font color="orange">;</font>
+<font color="red">...</font>
+<font color="blue">// get the connection from the Platform</font>
+<font color="green"><b>SQLBuilder sqlBuilder = new SQLBuilder("select a from b")</b></font><font color="orange">;</font>
+List&lt;String&gt; dList = new ArrayList&lt;&gt;()<font color="orange">;</font>
+dList.add("a")<font color="orange">;</font>
+dList.add("b")<font color="orange">;</font>
+<font color="green"><b>sqlBuilder.append("where c = ? and d in (?)", 42, dList)</b></font><font color="orange">;</font>
+int a = <font color="green"><b>sqlBuilder.getInt(connection, 1, -1)</b></font><font color="orange">;</font>
+</pre>
+
+
+<h3>Using SQLBuilder and Try Resources - Platform Project: ms-epcsfw</h3>
+
+
+<pre>
+<font color="red">import</font> <font color="cyan">com.metricstream.systemi.sql.SQLBuilder</font><font color="orange">;</font>
+<font color="red">...</font>
+<font color="blue">// get the connection from the Platform</font>
+<font color="green"><b>SQLBuilder sqlBuilder = new SQLBuilder("select a1, a2, a3 from b")</b></font><font color="orange">;</font>
+List&lt;String&gt; dList = new ArrayList&lt;&gt;()<font color="orange">;</font>
+dList.add("a")<font color="orange">;</font>
+dList.add("b")<font color="orange">;</font>
+<font color="green"><b>sqlBuilder.append("where c = ? and d in (?)", 42, dList)</b></font><font color="orange">;</font>
+<font color="orange">try</font> (<font color="green"><b>ResultSet rs = sqlBuilder.getResultSet(connection)</b></font>) { <font color="blue">// create the ResultSet inside the try expression</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+} <font color="orange">catch</font> (SQLException sqlException) {
+    logger.error("Failed to execute query {}", sqlBuilder, sqlException)<font color="orange">;</font>
+}
+</pre>
+
+
+<h3>Using Try Resources</h3>
+
+
+<pre>
+<font color="blue">// get the connection from the Platform</font>
+<font color="orange">try</font> (<font color="green"><b>Statement statement = connection.createStatement()</b></font>) { <font color="blue">// create the Statement inside the try expression</font>
+    <font color="red">...;</font><font color="blue"> // more code;</font>
+} <font color="orange">catch</font> (SQLException sqlException) {
+    logger.error("Failed to create statement", sqlException)<font color="orange">;</font>
+}
+</pre>
