@@ -1,4 +1,4 @@
-package com.metricstream.sonarqube.custom.rules;
+package com.gp.sonarqube.custom.rules;
 
 import org.sonar.plugins.java.api.CheckRegistrar;
 import org.sonar.plugins.java.api.JavaCheck;
@@ -6,7 +6,7 @@ import org.sonarsource.api.sonarlint.SonarLintSide;
 
 import java.util.List;
 
-import static com.metricstream.sonarqube.custom.rules.JavaRulesDefinition.REPOSITORY_KEY;
+import static com.gp.sonarqube.custom.rules.JavaRulesDefinition.REPOSITORY_KEY;
 
 /**
  * @author GP

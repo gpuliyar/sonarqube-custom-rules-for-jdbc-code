@@ -23,7 +23,7 @@ import java.util.List;
 import static com.google.common.collect.ImmutableList.of;
 import static org.sonar.plugins.java.api.tree.Tree.Kind.METHOD_INVOCATION;
  
-@Rule(key = "ResultSetCloseCheckRule")  ..................................................................................... (1)
+@Rule(key = "ResultSetCloseCheckRule")  ........................................................................................ (1)
 public class ResultSetCloseCheckRule extends IssuableSubscriptionVisitor { ..................................................... (2)
     private final String RESULT_SET_CLASS = java.sql.ResultSet.class.getCanonicalName();
     private final String CLOSE_METHOD = "close";
